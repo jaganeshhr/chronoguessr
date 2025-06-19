@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TimeGuesser MVP</title>
+  <title>Chronoguessr</title>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -144,13 +144,14 @@
   </style>
 </head>
 <body>
-  <h1>TimeGuesser</h1>
+  <h1>ChronoGuesser</h1>
+  <h3>A time guessing game using images from the MET.</h3>
   <div id="scoreBoard">Score: 0 | Streak: 0</div>
 
   <div id="modeSelector">
     <label for="mode">Game Mode: </label>
     <select id="mode" onchange="changeMode()">
-      <option value="default">Default</option>
+      <option value="default">Standard</option>
       <option value="time">Time Challenge</option>
       <option value="sudden">Sudden Death</option>
     </select>
@@ -160,13 +161,11 @@
   <div class="game-container">
     <img id="objectImage" src="" alt="Loading object..." />
     <div class="slider-container">
-      <p>Guess the year this object is from:</p>
+      <p>Guess the year this object is from</p>
       <input type="range" id="yearSlider" class="slider" min="-5000" max="2023" value="0" />
       <div class="slider-labels">
         <span>5000 BCE</span>
-        <span>2500 BCE</span>
         <span>0</span>
-        <span>1000 CE</span>
         <span>2023 CE</span>
       </div>
       <p>Your Guess: <span id="yearDisplay">0 CE</span></p>
@@ -183,7 +182,7 @@
   <div id="gameOverPopup">
     <div class="popup-content">
       <h2>Game Over</h2>
-      <p>You missed by more than 50 years. Better luck next time!</p>
+      <p>You missed by more than a century. Better luck next time!</p>
       <button onclick="closeGameOver()">Try Again</button>
     </div>
   </div>
@@ -225,7 +224,7 @@
     }
 
     async function fetchRandomObject() {
-      const searchRes = await fetch("https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=*&dateBegin=-5000&dateEnd=1900");
+      const searchRes = await fetch("https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=*&dateBegin=-5000&dateEnd=2023");
       const data = await searchRes.json();
       const randomId = data.objectIDs[Math.floor(Math.random() * data.objectIDs.length)];
       const objectRes = await fetch(`https://collectionapi.metmuseum.org/public/collection/v1/objects/${randomId}`);
@@ -281,7 +280,7 @@
         earned += timeLeft * 10;
       }
 
-      if (gameMode === 'sudden' && diff > 50) {
+      if (gameMode === 'sudden' && diff > 100) {
         earned = 0;
         gameOverPopup.style.display = 'flex';
       } else {
